@@ -59,6 +59,8 @@ tests/                   核心测试与基于真实 SDK 的本地 OSS 测试
 
 使用详解见 [GD.md](GD.md)，OSS 配置和 Python API 见 [OSS.md](OSS.md)，模块开发见 [MODULES.md](MODULES.md)。
 
+开发代理和协作约定见 [AGENTS.md](AGENTS.md)。
+
 ## 验证
 
 ```powershell
