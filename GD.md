@@ -28,7 +28,7 @@ gd remove hello
 
 自动识别 `.py`、`.pyw`、`.ps1`、`.sh` 和 Windows `.exe/.com`；Linux/macOS 可直接运行具有执行权限的文件。其他扩展名可通过 `--runner python/powershell/bash/exec` 指定。Windows `.bat/.cmd` 不在支持范围内，可改用 PowerShell 脚本。
 
-Python 默认使用 `gd` 所在虚拟环境，自己的脚本需要其他依赖时可指定解释器：
+新注册或用 `--replace` 更新的 Python 脚本，默认使用 `gd` 所在的本仓库 `.venv`。已有注册保存的解释器路径保持原值；自己的脚本需要其他依赖时可指定解释器：
 
 ```powershell
 gd add report D:\scripts\report.py --interpreter D:\report-env\Scripts\python.exe
@@ -127,28 +127,52 @@ gd oss put --help
 
 ## 安装及移除
 
-本机现有 `gd.exe` 安装在当前用户 Python 的 `Scripts` 目录，运行环境来自原来的 `code` 目录。本仓库源码位于 `C:\Users\92416\Documents\woker\gd`。先在仓库根目录创建环境并安装依赖：
+本机 `gd.exe` 安装在当前用户 Python 的 `Scripts` 目录，启动器绑定本仓库的 `.venv`。源码位于 `C:\Users\92416\Documents\woker\gd`。准备环境和安装入口只需执行：
 
 ```powershell
 Set-Location C:\Users\92416\Documents\woker\gd
-py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[oss]"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-需要将全局命令切换到本仓库时，先用原安装器移除旧启动器，再安装本仓库的入口：
+`setup.ps1` 可重复执行：已有完整环境会复用，不会删除或重建。创建时优先用 `py -3`，没有启动器时查找 `python`；版本要求 3.10+，也可用 `-Python` 指定创建环境的解释器。已有环境不会因该选项而更换 Python 版本。
+
+| 选项 | 用途 |
+|---|---|
+| `-Dev` | 安装完整测试依赖 |
+| `-CoreOnly` | 仅安装通用核心，不安装 OSS 依赖；不能与 `-Dev` 同用 |
+| `-NoLauncher` | 准备环境及本地入口，不更新全局 `gd` |
+| `-Python <路径或名称>` | 创建环境时使用指定的 Python |
+| `-MigrateFrom <旧项目路径>` | 显式接管该旧项目拥有的全局启动器；不能与 `-NoLauncher` 同用 |
+
+若启动器属于另一项目，默认会停止。明确迁移本机旧 `code` 安装的示例（路径相对当前工作目录解析）：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\code\install-gd.ps1 -Uninstall
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev -MigrateFrom ..\code
+```
+
+本机迁移已经完成，以后直接运行 `setup.ps1`。旧项目、注册记录和用户 `.ossenv` 保留。环境不完整时脚本会停止并保留目录，修复后重试即可。
+
+只更新已准备好环境的启动器：
+
+```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\install-gd.ps1
 ```
 
-以后更新本仓库的启动器：
+安装器只安装当前项目生成的 `gd` 启动器；无安装清单的同名程序不会被覆盖。`-MigrateFrom` 必须与现有清单中的项目和目标启动器路径匹配，且不能用于卸载其他项目。移动项目后可用该选项显式迁移。上述 `ExecutionPolicy` 参数只用于当前 PowerShell 进程。
+
+## 默认使用项目 Python
+
+`gd ...` 及其默认注册的 Python 脚本使用 `gd/.venv/Scripts/python.exe`，无需激活终端；`--interpreter` 继续优先于默认值。`run.ps1` 将所有参数交给同一解释器，返回 Python 的退出码，不改变调用时的工作目录：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\install-gd.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -c "import sys; print(sys.executable)"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py oss ls
 ```
 
-安装器只安装当前项目生成的 `gd` 启动器；检测到其他同名命令时停止，不覆盖它。启动器绑定安装项目的 `.venv`；移动项目后，应先移除旧启动器，再从新位置重新安装。上述 `ExecutionPolicy` 参数只用于安装进程。
+允许执行本地脚本的终端也可简写为 `.\run.ps1 -m pytest`。只准备环境时可直接使用 `.\.venv\Scripts\gd.exe ...`。需要让当前终端的裸 `python` 也选择这个环境时，手动运行 `.\.venv\Scripts\Activate.ps1`；全局系统 Python 的设置不会被准备脚本修改。
+
+## 移除入口
 
 移除全局命令（保留代码、配置和下载文件）：
 
@@ -156,7 +180,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\install-gd.ps1 -Uninstall
 ```
 
-不安装启动器也可以运行：
+不安装全局启动器也可以运行：
 
 ```powershell
 .\.venv\Scripts\python.exe gd.py oss ls

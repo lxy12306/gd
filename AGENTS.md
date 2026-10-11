@@ -13,22 +13,22 @@
 - `tests/`：核心测试，以及官方 SDK 访问本地 HTTP 服务的 OSS 测试。
 - `pyproject.toml`：打包、命令入口、可选依赖与测试配置。
 - `install-gd.ps1`：Windows 全局启动器的安装、更新和移除。
+- `setup.ps1`：创建或复用项目虚拟环境、安装依赖并准备命令入口。
+- `run.ps1`：Python 命令统一使用本仓库 `.venv` 的执行入口。
 
 阅读文档：[README.md](README.md) 是入口，[GD.md](GD.md) 是使用指南，[OSS.md](OSS.md) 介绍 OSS 配置和 Python API，[MODULES.md](MODULES.md) 介绍模块扩展。本文件列开发约束；具体命令和配置行为在使用文档说明。
 
 ## 开发环境与源码验证
 
-开发和验证从本仓库根目录执行，使用明确的 Python 路径和 `python gd.py ...`，避免把旧安装环境的运行结果当成本仓库的结果。优先使用仓库自己的 `.venv`；复用本机已有环境前，先核对后文“本机环境备注”。
+开发和验证从本仓库根目录执行，Python 命令默认使用本仓库的 `.venv`：通过 `run.ps1` 或明确的 `.\.venv\Scripts\python.exe` 执行，不使用未激活环境的裸 `python`/`pip`。`gd` 启动器也绑定本仓库环境；先核对导入路径，避免验证其他源码副本。
 
 创建开发环境：
 
 ```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[oss]"
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
 ```
 
-仅开发独立核心时，安装命令改为 `.\.venv\Scripts\python.exe -m pip install -e .`，不安装 OSS 可选依赖。完整测试前需安装 `requirements-dev.txt` 中的依赖。
+仅准备核心环境时使用 `setup.ps1 -CoreOnly`，不安装 OSS 可选依赖；不更新全局入口时加 `-NoLauncher`。完整测试使用 `-Dev`。已有虚拟环境复用，损坏环境不自动删除；其他项目拥有的全局入口仅在显式 `-MigrateFrom` 匹配时迁移，不能绕过归属检查。
 
 确认导入的是当前源码；在仓库根目录运行，断言应通过，输出所指向的模块文件应位于本仓库：
 
@@ -73,9 +73,9 @@ py -3 -m venv .venv
 代码变更运行相关测试；涉及核心分发、配置兼容、注册或传输流程时运行完整测试：
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest
-.\.venv\Scripts\python.exe gd.py --help
-.\.venv\Scripts\python.exe gd.py list
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py --help
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py list
 ```
 
 测试使用临时注册目录、假凭证和本地 OSS HTTP 服务。手动验证脚本注册时通过 `--home` 指定临时目录，避免修改用户默认注册信息。常规代码验证不操作真实 OSS；用户任务明确包含真实云端验证时，按任务范围执行。
@@ -86,7 +86,7 @@ py -3 -m venv .venv
 
 ## 本机环境备注（2026-10-11 核实）
 
-本机仓库位于 `C:\Users\92416\Documents\woker\gd`。本次核实的全局 `gd` 启动器使用旁边 `code` 目录的安装环境，修改本仓库不会立即改变那个命令的行为。安装或迁移后重新核实，不能把该记录当作其他机器或未来安装的固定状态。
+本机仓库位于 `C:\Users\92416\Documents\woker\gd`。执行准备脚本后，全局 `gd` 已迁移至本仓库，使用 `C:\Users\92416\Documents\woker\gd\.venv\Scripts\python.exe`。安装或迁移后重新核实，不能把该记录当作其他机器或未来安装的固定状态。
 
 已安装全局命令时，查看实际启动器及同目录清单；以输出中的 `project`、`python` 为准：
 
@@ -96,14 +96,7 @@ $taskGdManifest = Join-Path (Split-Path -Parent $taskGdExe) 'gd.install.json'
 Get-Content -LiteralPath $taskGdManifest -Raw -Encoding UTF8 | ConvertFrom-Json | Select-Object project, python
 ```
 
-本机也可复用已有环境，从本仓库根目录运行：
-
-```powershell
-..\code\.venv\Scripts\python.exe gd.py --help
-..\code\.venv\Scripts\python.exe -m pytest
-```
-
-复用环境前确认该解释器存在；源码检查也要使用这个解释器，将前文命令中的 `.\.venv\Scripts\python.exe` 替换为 `..\code\.venv\Scripts\python.exe`。全局安装和迁移步骤见 [GD.md 的安装及移除](GD.md#安装及移除)。
+开发默认使用本仓库环境；保留的旧 `code` 环境用于兼容回退，不用于默认验证。准备和迁移步骤见 [GD.md 的安装及移除](GD.md#安装及移除)。已有脚本注册保存的解释器路径不会自动改写；新注册或 `--replace` 更新的 Python 脚本默认用当前 `gd` 环境，显式 `--interpreter` 按指定值执行。
 
 本机终端若找不到 `git`，可以使用已安装的完整路径：
 

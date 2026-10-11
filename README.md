@@ -29,17 +29,24 @@ gd oss search 文生图
 
 ## 安装
 
-在仓库根目录安装完整工具箱（Python 3.10+）：
+在仓库根目录准备环境并安装全局命令（Windows，Python 3.10+）：
 
 ```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[oss]"
- powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install-gd.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-本机现有全局命令来自原来的 `code` 目录。若要切换到本仓库，先创建这里的环境，再按 [GD.md](GD.md) 移除旧启动器并安装新入口。
+脚本会创建或复用本仓库的 `.venv`，安装项目和 OSS 依赖，检查环境，再安装绑定该环境的 `gd` 启动器。以后从任意目录执行 `gd ...` 都使用 `.venv` 中的 Python，不需要激活环境。本机已从原来的 `code` 安装迁移到本仓库。
 
-只需要脚本管理时，使用 `python -m pip install -e .`，不安装 OSS 依赖。未安装全局命令时可用 `python gd.py ...` 或 `python -m gd_core ...`。
+开发环境加 `-Dev`；仅需核心加 `-CoreOnly`；只准备环境、不安装全局命令加 `-NoLauncher`。完整用法、显式迁移和解释器选择见 [GD.md](GD.md#安装及移除)。
+
+Python 命令通过 `run.ps1` 执行，默认使用本仓库的解释器并保留当前工作目录：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -c "import sys; print(sys.executable)"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py list
+```
+
+需要在当前终端直接输入 `python` 时，可手动激活 `.\.venv\Scripts\Activate.ps1`。`gd` 和 `run.ps1` 自己选择项目解释器，不依赖终端激活状态。
 
 ## 项目结构
 
@@ -64,8 +71,8 @@ tests/                   核心测试与基于真实 SDK 的本地 OSS 测试
 ## 验证
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
 ```
 
 测试隔离用户注册目录及 OSS 凭证；OSS 测试由官方 SDK 访问本地 HTTP 测试服务，不修改真实 Bucket。

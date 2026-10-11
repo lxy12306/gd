@@ -1,17 +1,18 @@
 param(
     [string]$InstallDir = '',
-    [switch]$Uninstall
+    [switch]$Uninstall,
+    [string]$MigrateFrom = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $taskProject = [IO.Path]::GetFullPath($PSScriptRoot)
 $taskPython = Join-Path $taskProject '.venv\Scripts\python.exe'
 if (!(Test-Path -LiteralPath $taskPython -PathType Leaf)) {
-    throw 'Missing code/.venv. Create the virtual environment and install requirements.txt first.'
+    throw 'Missing project .venv. Run setup.ps1 first.'
 }
 
 # Use this user's existing Python Scripts directory, which is already on PATH.
-# The generated console launcher always invokes code/.venv, not the base Python.
+# The generated console launcher always invokes this project's .venv Python.
 if (!$InstallDir) {
     $taskBasePython = (& $taskPython -c 'import sys; print(sys.base_prefix)').Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Cannot locate the Python Scripts directory.' }
@@ -25,7 +26,12 @@ $taskLauncher = Join-Path $taskProject '.venv\Scripts\gd.exe'
 if (Test-Path -LiteralPath $taskManifest) {
     $taskOwner = Get-Content -LiteralPath $taskManifest -Raw -Encoding UTF8 | ConvertFrom-Json
     if ($taskOwner.project -ne $taskProject) {
-        throw 'The existing gd installation belongs to another project. Nothing has been overwritten.'
+        if ($Uninstall -or !$MigrateFrom -or
+            $taskOwner.project -ne [IO.Path]::GetFullPath($MigrateFrom) -or
+            $taskOwner.launcher -ne $taskTarget) {
+            throw 'The existing gd installation belongs to another project. To migrate it, pass -MigrateFrom with its exact project path. Nothing has been overwritten.'
+        }
+        Write-Output "Migrating gd launcher from: $($taskOwner.project)"
     }
 } elseif (Test-Path -LiteralPath $taskTarget) {
     throw "An unrelated gd.exe already exists at $taskTarget. Nothing has been overwritten."
