@@ -12,9 +12,10 @@
 - `examples/`：可注册的普通脚本示例。
 - `tests/`：核心测试，以及官方 SDK 访问本地 HTTP 服务的 OSS 测试。
 - `pyproject.toml`：打包、命令入口、可选依赖与测试配置。
-- `install-gd.ps1`：Windows 全局启动器的安装、更新和移除。
-- `setup.ps1`：Windows 下创建或复用项目虚拟环境、安装依赖并准备命令入口。
-- `run.ps1`：Windows 下统一使用本仓库 `.venv` 执行 Python 命令。
+- `windows/`：Windows 平台入口；脚本定位父目录作为仓库根目录，环境位于根目录 `.venv`。
+- `windows/install-gd.ps1`：Windows 全局启动器的安装、更新和移除。
+- `windows/setup.ps1`：Windows 下创建或复用项目虚拟环境、安装依赖并准备命令入口。
+- `windows/run.ps1`：Windows 下统一使用本仓库 `.venv` 执行 Python 命令。
 
 阅读文档：[README.md](README.md) 是入口，[GD.md](GD.md) 是使用指南，[OSS.md](OSS.md) 介绍 OSS 配置和 Python API，[MODULES.md](MODULES.md) 介绍模块扩展。本文件列开发约束；具体命令和配置行为在使用文档说明。
 
@@ -22,15 +23,15 @@
 
 本节及后面的 PowerShell 命令适用于 Windows，解释器路径为 `.venv\Scripts\python.exe`。其他系统任务需按其实际路径和部署方式执行，不照搬 Windows 命令。
 
-开发和验证从本仓库根目录执行，Python 命令默认使用本仓库的 `.venv`：通过 `run.ps1` 或明确的 `.\.venv\Scripts\python.exe` 执行，不使用未激活环境的裸 `python`/`pip`。`gd` 启动器也绑定本仓库环境；先核对导入路径，避免验证其他源码副本。
+开发和验证从本仓库根目录执行，Python 命令默认使用本仓库的 `.venv`：通过 `windows/run.ps1` 或明确的 `.\.venv\Scripts\python.exe` 执行，不使用未激活环境的裸 `python`/`pip`。`gd` 启动器也绑定本仓库环境；先核对导入路径，避免验证其他源码副本。
 
 创建开发环境：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1 -Dev
 ```
 
-仅准备核心环境时使用 `setup.ps1 -CoreOnly`，不安装 OSS 可选依赖；不更新全局入口时加 `-NoLauncher`。完整测试使用 `-Dev`。已有虚拟环境复用，损坏环境不自动删除；其他项目拥有的全局入口仅在显式 `-MigrateFrom` 匹配时迁移，不能绕过归属检查。
+仅准备核心环境时使用 `windows/setup.ps1 -CoreOnly`，不安装 OSS 可选依赖；不更新全局入口时加 `-NoLauncher`。完整测试使用 `-Dev`。已有虚拟环境复用，损坏环境不自动删除；其他项目拥有的全局入口仅在显式 `-MigrateFrom` 匹配时迁移，不能绕过归属检查。
 
 确认导入的是当前源码；在仓库根目录运行，断言应通过，输出所指向的模块文件应位于本仓库：
 
@@ -75,9 +76,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
 代码变更运行相关测试；涉及核心分发、配置兼容、注册或传输流程时运行完整测试：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py --help
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py list
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 gd.py --help
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 gd.py list
 ```
 
 测试使用临时注册目录、假凭证和本地 OSS HTTP 服务。手动验证脚本注册时通过 `--home` 指定临时目录，避免修改用户默认注册信息。常规代码验证不操作真实 OSS；用户任务明确包含真实云端验证时，按任务范围执行。

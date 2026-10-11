@@ -7,7 +7,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$taskProject = [IO.Path]::GetFullPath($PSScriptRoot)
+$taskProject = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $taskVenv = Join-Path $taskProject '.venv'
 $taskPython = Join-Path $taskVenv 'Scripts\python.exe'
 
@@ -81,11 +81,11 @@ if ($LASTEXITCODE -ne 0) { throw 'The gd virtual-environment entry point failed 
 if (!$NoLauncher) {
     $taskLauncherArguments = @{}
     if ($MigrateFrom) { $taskLauncherArguments.MigrateFrom = $MigrateFrom }
-    & (Join-Path $taskProject 'install-gd.ps1') @taskLauncherArguments
+    & (Join-Path $PSScriptRoot 'install-gd.ps1') @taskLauncherArguments
 }
 
 Write-Output "Ready. Default Python: $taskPython"
-Write-Output 'Run Python commands: .\run.ps1 <python arguments>'
+Write-Output 'Run Python commands from the project root: .\windows\run.ps1 <python arguments>'
 if ($NoLauncher) {
     Write-Output 'Run gd locally: .\.venv\Scripts\gd.exe <arguments>'
 } else {

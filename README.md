@@ -32,23 +32,25 @@ gd oss search 文生图
 在仓库根目录准备环境并安装全局命令（Windows，Python 3.10+）：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1
 ```
 
 脚本会创建或复用本仓库的 `.venv`，安装项目和 OSS 依赖，检查环境，再安装绑定该环境的 `gd` 启动器。以后从任意目录执行 `gd ...` 都使用 `.venv` 中的 Python，不需要激活环境。本机已从原来的 `code` 安装迁移到本仓库。
 
-`setup.ps1`、`run.ps1` 和 `install-gd.ps1` 是 Windows 脚本，本文的 `powershell.exe` 及 `.venv\Scripts` 示例对应 Windows；其他系统的环境安装需使用其对应的解释器路径和部署方式。
+`windows/setup.ps1`、`windows/run.ps1` 和 `windows/install-gd.ps1` 是 Windows 脚本，本文的 `powershell.exe` 及 `.venv\Scripts` 示例对应 Windows；其他系统的环境安装需使用其对应的解释器路径和部署方式。
+
+脚本从 `windows` 目录定位仓库根目录，虚拟环境统一放在仓库根目录的 `.venv`。下方相对路径命令均在仓库根目录执行。
 
 开发环境加 `-Dev`；仅需核心加 `-CoreOnly`；只准备环境、不安装全局命令加 `-NoLauncher`。完整用法、显式迁移和解释器选择见 [GD.md](GD.md#安装及移除)。
 
-Windows 上的 Python 命令通过 `run.ps1` 执行，默认使用本仓库的解释器并保留当前工作目录：
+Windows 上的 Python 命令通过 `windows/run.ps1` 执行，默认使用本仓库的解释器并保留当前工作目录：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -c "import sys; print(sys.executable)"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py list
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 -c "import sys; print(sys.executable)"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 gd.py list
 ```
 
-需要在当前终端直接输入 `python` 时，可手动激活 `.\.venv\Scripts\Activate.ps1`。`gd` 和 `run.ps1` 自己选择项目解释器，不依赖终端激活状态。
+需要在当前终端直接输入 `python` 时，可手动激活 `.\.venv\Scripts\Activate.ps1`。`gd` 和 `windows/run.ps1` 自己选择项目解释器，不依赖终端激活状态。
 
 ## 项目结构
 
@@ -62,6 +64,10 @@ gd_core/                 通用核心：命令分发、模块发现、注册文�
 oss_toolkit/             OSS 配置、命令与 SDK 服务
 examples/hello.py        可注册的普通脚本示例
 tests/                   核心测试与基于真实 SDK 的本地 OSS 测试
+windows/                 Windows 平台脚本
+  setup.ps1              准备虚拟环境和命令入口
+  run.ps1                使用项目 Python 执行命令
+  install-gd.ps1         安装、迁移和移除启动器
 ```
 
 普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。
@@ -73,8 +79,8 @@ tests/                   核心测试与基于真实 SDK 的本地 OSS 测试
 ## 验证（Windows）
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1 -Dev
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 -m pytest
 ```
 
 测试隔离用户注册目录及 OSS 凭证；OSS 测试由官方 SDK 访问本地 HTTP 测试服务，不修改真实 Bucket。

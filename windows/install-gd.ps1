@@ -5,10 +5,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$taskProject = [IO.Path]::GetFullPath($PSScriptRoot)
+$taskProject = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $taskPython = Join-Path $taskProject '.venv\Scripts\python.exe'
 if (!(Test-Path -LiteralPath $taskPython -PathType Leaf)) {
-    throw 'Missing project .venv. Run setup.ps1 first.'
+    throw 'Missing project .venv. Run windows/setup.ps1 first.'
 }
 
 # Use this user's existing Python Scripts directory, which is already on PATH.

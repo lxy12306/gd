@@ -8,11 +8,13 @@
 
 | Windows 脚本 | 用途 |
 |---|---|
-| `setup.ps1` | 创建或复用 `.venv`、安装依赖和 `gd` 启动器 |
-| `run.ps1` | 使用 `.venv\Scripts\python.exe` 执行 Python 命令 |
-| `install-gd.ps1` | 更新、迁移或移除 Windows `gd.exe` 启动器 |
+| `windows/setup.ps1` | 创建或复用 `.venv`、安装依赖和 `gd` 启动器 |
+| `windows/run.ps1` | 使用 `.venv\Scripts\python.exe` 执行 Python 命令 |
+| `windows/install-gd.ps1` | 更新、迁移或移除 Windows `gd.exe` 启动器 |
 
 下文的 `powershell.exe`、盘符路径和 `.venv\Scripts` 命令适用于 Windows；Linux/macOS 的环境安装流程需使用对应系统的解释器路径和部署方式。
+
+Windows 脚本统一放在仓库的 `windows` 目录，按脚本位置定位仓库根目录；虚拟环境仍位于仓库根目录的 `.venv`。相对路径示例从仓库根目录执行。
 
 ## 管理自己的脚本
 
@@ -144,14 +146,14 @@ gd oss put --help
 需要已安装 Python 3.10+。本机 `gd.exe` 安装在当前用户 Python 的 `Scripts` 目录，启动器绑定本仓库的 `.venv`。源码位于 `C:\Users\92416\Documents\woker\gd`。在 Windows PowerShell 中，从任意目录可运行以下本机准备命令：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\92416\Documents\woker\gd\setup.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\92416\Documents\woker\gd\windows\setup.ps1"
 ```
 
 脚本自动准备虚拟环境、安装依赖并设置 `gd` 使用环境中的 Python。本机已经准备好，重复执行会复用现有环境。需要同时安装测试依赖时，在命令末尾加 `-Dev`。
 
-以下相对路径示例从仓库根目录执行；准备命令可以简写为 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1`。
+以下相对路径示例从仓库根目录执行；准备命令可以简写为 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1`。
 
-`setup.ps1` 可重复执行：已有完整环境会复用，不会删除或重建。创建时优先用 `py -3`，没有启动器时查找 `python`；版本要求 3.10+，也可用 `-Python` 指定创建环境的解释器。已有环境不会因该选项而更换 Python 版本。
+`windows/setup.ps1` 可重复执行：已有完整环境会复用，不会删除或重建。创建时优先用 `py -3`，没有启动器时查找 `python`；版本要求 3.10+，也可用 `-Python` 指定创建环境的解释器。已有环境不会因该选项而更换 Python 版本。
 
 | 选项 | 用途 |
 |---|---|
@@ -164,37 +166,37 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\92416\Document
 若启动器属于另一项目，默认会停止。明确迁移本机旧 `code` 安装的示例（路径相对当前工作目录解析）：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev -MigrateFrom ..\code
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1 -Dev -MigrateFrom ..\code
 ```
 
-本机迁移已经完成，以后直接运行 `setup.ps1`。旧项目、注册记录和用户 `.ossenv` 保留。环境不完整时脚本会停止并保留目录，修复后重试即可。
+本机迁移已经完成，以后直接运行 `windows/setup.ps1`。旧项目、注册记录和用户 `.ossenv` 保留。环境不完整时脚本会停止并保留目录，修复后重试即可。
 
 只更新已准备好环境的启动器：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\install-gd.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\windows\install-gd.ps1
 ```
 
 安装器只安装当前项目生成的 `gd` 启动器；无安装清单的同名程序不会被覆盖。`-MigrateFrom` 必须与现有清单中的项目和目标启动器路径匹配，且不能用于卸载其他项目。移动项目后可用该选项显式迁移。上述 `ExecutionPolicy` 参数只用于当前 PowerShell 进程。
 
 ## Windows：默认使用项目 Python
 
-`gd ...` 及其默认注册的 Python 脚本使用 `gd/.venv/Scripts/python.exe`，无需激活终端；`--interpreter` 继续优先于默认值。`run.ps1` 将所有参数交给同一解释器，返回 Python 的退出码，不改变调用时的工作目录：
+`gd ...` 及其默认注册的 Python 脚本使用 `gd/.venv/Scripts/python.exe`，无需激活终端；`--interpreter` 继续优先于默认值。`windows/run.ps1` 将所有参数交给同一解释器，返回 Python 的退出码，不改变调用时的工作目录：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -c "import sys; print(sys.executable)"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -m pytest
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py oss ls
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 -c "import sys; print(sys.executable)"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 -m pytest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\run.ps1 gd.py oss ls
 ```
 
-允许执行本地脚本的终端也可简写为 `.\run.ps1 -m pytest`。只准备环境时可直接使用 `.\.venv\Scripts\gd.exe ...`。需要让当前终端的裸 `python` 也选择这个环境时，手动运行 `.\.venv\Scripts\Activate.ps1`；全局系统 Python 的设置不会被准备脚本修改。
+允许执行本地脚本的终端也可简写为 `.\windows\run.ps1 -m pytest`。只准备环境时可直接使用 `.\.venv\Scripts\gd.exe ...`。需要让当前终端的裸 `python` 也选择这个环境时，手动运行 `.\.venv\Scripts\Activate.ps1`；全局系统 Python 的设置不会被准备脚本修改。
 
 ## Windows：移除入口
 
 移除全局命令（保留代码、配置和下载文件）：
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\install-gd.ps1 -Uninstall
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents\woker\gd\windows\install-gd.ps1 -Uninstall
 ```
 
 不安装全局启动器也可以运行：
