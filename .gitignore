@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+.env
+.env.*
+!.env.example
+.ossenv
+.ossenv.*
+!.ossenv.example
+.oss-checkpoints/
+downloads/
+*.oss-part
+*.py[cod]
+build/
+dist/
+.gd/

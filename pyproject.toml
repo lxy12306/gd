@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gd-toolbox"
+version = "2.0.0"
+description = "General script manager with extensible command modules"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+oss = ["alibabacloud-oss-v2==1.4.0", "python-dotenv==1.2.4"]
+
+[project.scripts]
+oss-tool = "oss_toolkit.cli:main"
+gd = "gd_core.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["gd_core*", "oss_toolkit*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

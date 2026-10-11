@@ -1,0 +1,21 @@
+# Copy this file to ~/.ossenv (Windows: %USERPROFILE%\.ossenv).
+# Fill in an existing RAM user's credentials locally.
+ACCESS_KEY_ID=
+ACCESS_KEY_SECRET=
+# Optional, for temporary STS credentials only.
+SESSION_TOKEN=
+
+BUCKET=smell
+REGION=cn-hangzhou
+# Leave empty to use the region's default HTTPS endpoint.
+# For a custom bucket domain, set its complete URL and USE_CNAME=true.
+ENDPOINT=
+USE_CNAME=false
+
+WORKERS=4
+PART_SIZE_MB=8
+CONNECT_TIMEOUT=10
+READ_TIMEOUT=60
+MAX_ATTEMPTS=3
+# Relative paths are resolved against this program's directory.
+CHECKPOINT_DIR=.oss-checkpoints
