@@ -2,6 +2,18 @@
 
 `gd` 是通用脚本工具箱。核心负责本地脚本管理，功能模块各自处理自己的命令和配置。
 
+## 平台说明
+
+本指南的终端和路径示例按 **Windows / PowerShell** 编写。虚拟环境准备、Python 命令执行和全局入口管理脚本为 Windows 版本：
+
+| Windows 脚本 | 用途 |
+|---|---|
+| `setup.ps1` | 创建或复用 `.venv`、安装依赖和 `gd` 启动器 |
+| `run.ps1` | 使用 `.venv\Scripts\python.exe` 执行 Python 命令 |
+| `install-gd.ps1` | 更新、迁移或移除 Windows `gd.exe` 启动器 |
+
+下文的 `powershell.exe`、盘符路径和 `.venv\Scripts` 命令适用于 Windows；Linux/macOS 的环境安装流程需使用对应系统的解释器路径和部署方式。
+
 ## 管理自己的脚本
 
 ```powershell
@@ -127,12 +139,17 @@ gd oss put --help
 
 ## 安装及移除
 
-本机 `gd.exe` 安装在当前用户 Python 的 `Scripts` 目录，启动器绑定本仓库的 `.venv`。源码位于 `C:\Users\92416\Documents\woker\gd`。准备环境和安装入口只需执行：
+### Windows：准备或更新虚拟环境
+
+需要已安装 Python 3.10+。本机 `gd.exe` 安装在当前用户 Python 的 `Scripts` 目录，启动器绑定本仓库的 `.venv`。源码位于 `C:\Users\92416\Documents\woker\gd`。在 Windows PowerShell 中，从任意目录可运行以下本机准备命令：
 
 ```powershell
-Set-Location C:\Users\92416\Documents\woker\gd
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\92416\Documents\woker\gd\setup.ps1"
 ```
+
+脚本自动准备虚拟环境、安装依赖并设置 `gd` 使用环境中的 Python。本机已经准备好，重复执行会复用现有环境。需要同时安装测试依赖时，在命令末尾加 `-Dev`。
+
+以下相对路径示例从仓库根目录执行；准备命令可以简写为 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1`。
 
 `setup.ps1` 可重复执行：已有完整环境会复用，不会删除或重建。创建时优先用 `py -3`，没有启动器时查找 `python`；版本要求 3.10+，也可用 `-Python` 指定创建环境的解释器。已有环境不会因该选项而更换 Python 版本。
 
@@ -160,7 +177,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\92416\Documents
 
 安装器只安装当前项目生成的 `gd` 启动器；无安装清单的同名程序不会被覆盖。`-MigrateFrom` 必须与现有清单中的项目和目标启动器路径匹配，且不能用于卸载其他项目。移动项目后可用该选项显式迁移。上述 `ExecutionPolicy` 参数只用于当前 PowerShell 进程。
 
-## 默认使用项目 Python
+## Windows：默认使用项目 Python
 
 `gd ...` 及其默认注册的 Python 脚本使用 `gd/.venv/Scripts/python.exe`，无需激活终端；`--interpreter` 继续优先于默认值。`run.ps1` 将所有参数交给同一解释器，返回 Python 的退出码，不改变调用时的工作目录：
 
@@ -172,7 +189,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 gd.py oss ls
 
 允许执行本地脚本的终端也可简写为 `.\run.ps1 -m pytest`。只准备环境时可直接使用 `.\.venv\Scripts\gd.exe ...`。需要让当前终端的裸 `python` 也选择这个环境时，手动运行 `.\.venv\Scripts\Activate.ps1`；全局系统 Python 的设置不会被准备脚本修改。
 
-## 移除入口
+## Windows：移除入口
 
 移除全局命令（保留代码、配置和下载文件）：
 

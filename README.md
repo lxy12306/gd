@@ -27,7 +27,7 @@ gd oss search 文生图
 
 注册信息保存在 `~/.gd/scripts.json`，脚本保留在原位置。移除注册只删除名称与路径的关联。OSS 默认读取 `~/.ossenv`，字段保持 `ACCESS_KEY_ID`、`ACCESS_KEY_SECRET` 等无前缀形式。
 
-## 安装
+## 安装（Windows）
 
 在仓库根目录准备环境并安装全局命令（Windows，Python 3.10+）：
 
@@ -37,9 +37,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
 
 脚本会创建或复用本仓库的 `.venv`，安装项目和 OSS 依赖，检查环境，再安装绑定该环境的 `gd` 启动器。以后从任意目录执行 `gd ...` 都使用 `.venv` 中的 Python，不需要激活环境。本机已从原来的 `code` 安装迁移到本仓库。
 
+`setup.ps1`、`run.ps1` 和 `install-gd.ps1` 是 Windows 脚本，本文的 `powershell.exe` 及 `.venv\Scripts` 示例对应 Windows；其他系统的环境安装需使用其对应的解释器路径和部署方式。
+
 开发环境加 `-Dev`；仅需核心加 `-CoreOnly`；只准备环境、不安装全局命令加 `-NoLauncher`。完整用法、显式迁移和解释器选择见 [GD.md](GD.md#安装及移除)。
 
-Python 命令通过 `run.ps1` 执行，默认使用本仓库的解释器并保留当前工作目录：
+Windows 上的 Python 命令通过 `run.ps1` 执行，默认使用本仓库的解释器并保留当前工作目录：
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -c "import sys; print(sys.executable)"
@@ -68,7 +70,7 @@ tests/                   核心测试与基于真实 SDK 的本地 OSS 测试
 
 开发代理和协作约定见 [AGENTS.md](AGENTS.md)。
 
-## 验证
+## 验证（Windows）
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -Dev
