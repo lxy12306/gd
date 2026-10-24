@@ -6,12 +6,12 @@
 
 站点列表及写入密钥保存在当前用户的 `~/.gd/sites.json`，不在仓库中。可用 `GD_SITE_CONFIG` 或 `gd site --config <路径>` 指定其他本地配置文件。`gd site list` 不输出密钥。站点地址或类型变更后，需要重新执行 `login`，避免把旧密钥发给新地址。不要提交或分享 `sites.json`。
 
-本机已配置名为 `chatgpt` 的站点，且已保存写入密钥。从 `gd` 仓库根目录运行以下命令；`docs/index.html` 是已发布的 GD 站点页面源文件：
+本机已配置名为 `chatgpt` 的站点，且已保存写入密钥。从 `gd` 仓库根目录运行以下命令；`docs/index.html` 是首页，`docs/guide.html` 是使用说明：
 
 ```powershell
 gd site list
 gd site publish .\docs --site chatgpt
-gd site publish .\index.html --as index.html --site chatgpt
+gd site publish .\docs\index.html --as index.html --site chatgpt
 ```
 
 `publish` 会逐个上传文件，再请求其公开地址的 `HEAD`，核对 `X-GD-SHA256`。`/` 对应站点内的 `index.html`。单个文件最大 20 MB；目录发布跳过隐藏文件、`.git`、`.venv`、`node_modules` 等目录，并拒绝符号链接。发布只新增或覆盖本次文件，不会自动删除站点上的旧文件；多文件发布也不是一次原子切换。

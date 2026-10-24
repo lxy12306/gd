@@ -21,9 +21,9 @@
   </style>
 </head>
 <body>
-  <header class="top"><div class="wrap"><a class="brand" href="/"><b>g</b> gd</a><nav aria-label="页面导航"><a href="#modules">功能</a><a href="#publish">站点发布</a><a href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">源码 ↗</a></nav></div></header>
+  <header class="top"><div class="wrap"><a class="brand" href="/"><b>g</b> gd</a><nav aria-label="页面导航"><a href="#modules">功能</a><a href="#publish">站点发布</a><a href="guide.html">使用说明</a><a href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">源码 ↗</a></nav></div></header>
   <main>
-    <section class="hero"><div class="wrap"><div><div class="eyebrow">LOCAL TOOLBOX / STATIC PUBLISHING</div><h1>一个命令入口，<br><em>把工作发布出去。</em></h1><p>gd 管理本地脚本、阿里云 OSS 文件与静态站点。站点地址保存在本机配置；同一个发布命令可把文件送到 ChatGPT Site 或自有服务器。</p><div class="actions"><a class="button primary" href="#publish">查看发布方法 <span aria-hidden="true">↗</span></a><a class="button secondary" href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">查看仓库</a></div></div><div class="terminal" aria-label="gd 命令示例"><div class="terminal-head"><span></span><span></span><span></span><small>PowerShell · gd</small></div><pre><span class="comment"># 查看已配置的站点</span>
+    <section class="hero"><div class="wrap"><div><div class="eyebrow">LOCAL TOOLBOX / STATIC PUBLISHING</div><h1>一个命令入口，<br><em>把工作发布出去。</em></h1><p>gd 管理本地脚本、阿里云 OSS 文件与静态站点。站点地址保存在本机配置；同一个发布命令可把文件送到 ChatGPT Site 或自有服务器。</p><div class="actions"><a class="button primary" href="guide.html">阅读使用说明 <span aria-hidden="true">↗</span></a><a class="button secondary" href="#publish">了解站点发布</a></div></div><div class="terminal" aria-label="gd 命令示例"><div class="terminal-head"><span></span><span></span><span></span><small>PowerShell · gd</small></div><pre><span class="comment"># 查看已配置的站点</span>
 <span class="prompt">❯</span> gd site list
 
 <span class="comment"># 发布页面并回读校验</span>
@@ -39,7 +39,7 @@ gd site login chatgpt
 gd site publish .\dist --site chatgpt</code></pre></article><article><h3>自有服务器</h3><p>gd 可运行静态文件服务；公网使用时由你自己的 HTTPS 反向代理连接本机监听端口。</p><pre><code>gd site add myserver --provider self --url https://example.com --root D:\sites\public
 gd site login myserver
 gd site serve --site myserver --port 8765</code></pre></article></div><p class="note">站点公开地址用于浏览；写入操作只接受带密钥的请求。ChatGPT Site 的站点代码和存储先完成一次部署，后续页面更新直接通过 <code>gd site publish</code>。</p></div></section>
-    <section class="closing"><div class="wrap"><div><h2>继续使用 gd</h2><p>查看源码、安装方式、OSS 配置和完整命令说明。</p></div><a class="button primary" href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库 ↗</a></div></section>
+    <section class="closing"><div class="wrap"><div><h2>继续使用 gd</h2><p>从安装、脚本管理到 OSS 和站点发布，按步骤查看使用说明。</p></div><a class="button primary" href="guide.html">打开使用说明 ↗</a></div></section>
   </main>
   <footer class="footer"><div class="wrap"><span>gd · 本地脚本、对象存储与静态站点发布</span><a href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">github.com/lxy12306/gd</a></div></footer>
 </body>

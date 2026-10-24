@@ -70,7 +70,7 @@ windows/                 Windows 平台脚本
   install-gd.ps1         安装、迁移和移除启动器
 ```
 
-普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。站点发布详见 [SITE.md](SITE.md)，GD 公共站点的页面源文件是 [docs/index.html](docs/index.html)。
+普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。站点发布详见 [SITE.md](SITE.md)，GD 公共站点的页面源文件是 [首页](docs/index.html) 和 [使用说明](docs/guide.html)。
 
 使用详解见 [GD.md](GD.md)，OSS 配置和 Python API 见 [OSS.md](OSS.md)，模块开发见 [MODULES.md](MODULES.md)。
 

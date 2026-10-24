@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="gd 使用说明：安装、管理本地脚本、操作阿里云 OSS，以及发布静态站点。">
+  <title>使用说明 · gd</title>
+  <style>
+    :root{--bg:#f3f1eb;--paper:#fffefa;--ink:#1a2c2f;--muted:#586d6c;--line:#ced9d4;--dark:#102b30;--teal:#0c7469;--lime:#d9ef9d;--orange:#f3ad75}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}a{color:var(--teal)}a:focus-visible{outline:3px solid var(--orange);outline-offset:3px}.wrap{max-width:1120px;margin:auto;padding:0 30px}
+    .top{background:var(--dark);color:#f7faf1}.top .wrap{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:900;font-size:23px;letter-spacing:-.07em;text-decoration:none;color:inherit}.brand b{display:inline-grid;place-items:center;width:34px;height:34px;background:var(--lime);color:var(--dark);font-size:20px;border-radius:8px;margin-right:10px;transform:rotate(-8deg)}.top nav{display:flex;gap:23px;font-size:13px;font-weight:750}.top nav a{text-decoration:none;color:#c5dcd6}.top nav a:hover{color:var(--lime)}
+    .hero{background:radial-gradient(circle at 82% 5%,#246264 0,#164044 30%,var(--dark) 74%);color:#f7faf1;padding:75px 0 79px}.eyebrow{color:var(--lime);font-size:11px;font-weight:900;letter-spacing:.2em}.hero h1{font-size:clamp(42px,5vw,66px);line-height:1.1;letter-spacing:-.065em;margin:16px 0}.hero p{max-width:710px;color:#bfd5d0;font-size:17px;margin:0}.hero .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.button{display:inline-flex;align-items:center;text-decoration:none;font-size:13px;font-weight:850;padding:11px 17px;border-radius:7px}.button.primary{background:var(--lime);color:var(--dark)}.button.secondary{border:1px solid #8badab;color:#fff}
+    .layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:42px;padding-top:55px;padding-bottom:90px}.side{align-self:start;position:sticky;top:24px;border:1px solid var(--line);border-radius:11px;background:var(--paper);padding:20px}.side strong{font-size:11px;letter-spacing:.16em;color:var(--teal)}.side a{display:block;text-decoration:none;color:var(--ink);font-size:13px;font-weight:700;padding:8px 0}.side a:hover{color:var(--teal)}.article section{scroll-margin-top:26px;margin-bottom:50px}.article h2{font-size:clamp(28px,3vw,37px);letter-spacing:-.045em;line-height:1.2;margin:0 0 15px}.article h3{font-size:18px;margin:30px 0 8px}.article p,.article li{font-size:15px;color:#385351}.article p{margin:0 0 15px}.article ul{padding-left:22px;margin:10px 0 18px}.article code{background:#e5ece6;border-radius:4px;padding:2px 5px;font:13px Consolas,"Cascadia Code",monospace;color:#1e5552}.article pre{margin:15px 0 20px;background:var(--dark);color:#e3f2e8;padding:19px 22px;border-radius:9px;overflow:auto;font:13px/1.8 Consolas,"Cascadia Code",monospace}.article pre code{padding:0;background:none;color:inherit}.article .intro{font-size:16px;color:var(--muted)}.callout{background:#e5efde;border-left:4px solid var(--teal);padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;color:#244b43;font-size:14px}.doclinks{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.doclinks a{background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:7px 11px;text-decoration:none;font-size:13px;font-weight:750}.doclinks a:hover{border-color:var(--teal)}.footer{background:#092025;color:#98b8af;padding:20px 0;font-size:11px}.footer .wrap{display:flex;justify-content:space-between;gap:20px}.footer a{color:#c8ded7}
+    @media(max-width:800px){.layout{grid-template-columns:1fr;gap:24px}.side{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px}.side strong{width:100%}.side a{padding:3px 0}}@media(max-width:560px){.wrap{padding:0 19px}.top nav{gap:12px;font-size:11px}.hero{padding:58px 0}.article pre{font-size:11px;padding:15px}.footer .wrap{display:block}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="wrap"><a class="brand" href="/"><b>g</b> gd</a><nav aria-label="页面导航"><a href="/">首页</a><a href="#install">安装</a><a href="#scripts">脚本</a><a href="#oss">OSS</a><a href="#site">站点</a><a href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">源码 ↗</a></nav></div></header>
+  <main>
+    <div class="hero"><div class="wrap"><div class="eyebrow">GD / GUIDE</div><h1>gd 使用说明</h1><p>一个命令入口，管理本地脚本、阿里云 OSS 和静态站点。下面的示例按 Windows PowerShell 编写；完整参数和模块扩展方法见 GitHub 仓库。</p><div class="links"><a class="button primary" href="#install">从安装开始 ↓</a><a class="button secondary" href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">查看源码 ↗</a></div></div></div>
+    <div class="wrap layout"><aside class="side" aria-label="本页目录"><strong>本页目录</strong><a href="#install">01 安装与检查</a><a href="#scripts">02 管理脚本</a><a href="#oss">03 OSS 文件</a><a href="#site">04 发布站点</a><a href="#docs">05 完整文档</a></aside><div class="article">
+      <section id="install"><h2>01 / 安装与检查</h2><p class="intro">下载仓库后，在仓库根目录运行安装脚本。需要 Python 3.10 或更新版本。</p><pre><code>git clone https://github.com/lxy12306/gd.git
+cd gd
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1
+gd --version
+gd list</code></pre><p>安装脚本准备项目虚拟环境和全局 <code>gd</code> 命令。以后从任意目录都可运行 <code>gd</code>。开发环境可给安装脚本加 <code>-Dev</code>。</p><div class="callout">示例中的路径、站点地址和对象名需要按你的环境替换。配置文件和写入密钥只保存在本机，不应提交到仓库。</div></section>
+      <section id="scripts"><h2>02 / 管理本地脚本</h2><p class="intro">注册一次后，脚本可按名称调用。注册只记录脚本路径，不会复制或执行脚本。</p><pre><code>gd add hello .\examples\hello.py -d "问候示例"
+gd hello --name 张三
+gd run hello -- --name 张三
+gd info hello
+gd list
+gd remove hello</code></pre><p>支持 Python、PowerShell、Bash 和可执行文件。默认沿用当前工作目录；需要固定工作目录时给 <code>gd add</code> 加 <code>--cwd</code>。注册文件默认在 <code>~/.gd/scripts.json</code>，移除注册不会删除脚本文件。</p><div class="doclinks"><a href="https://github.com/lxy12306/gd/blob/master/GD.md#管理自己的脚本" target="_blank" rel="noopener noreferrer">脚本命令详解 ↗</a></div></section>
+      <section id="oss"><h2>03 / 操作 OSS 文件</h2><p class="intro">OSS 模块负责列举、上传、下载、检索和查看对象。首次使用先按仓库的 OSS 文档配置 <code>~/.ossenv</code>。</p><pre><code>gd oss config
+gd oss ls
+gd oss put .\image.png images/
+gd oss get images/image.png .\image.png
+gd oss search 文生图
+gd oss stat images/image.png</code></pre><p>上传同名对象默认不会覆盖；确需覆盖时加 <code>--overwrite</code>。在 Windows 上，如果本机的 APNetwork 路径影响 OSS 连接，可给当前命令加 <code>--direct-wlan</code>，让这次 OSS 请求从 WLAN 直连。</p><pre><code>gd oss --direct-wlan stat images/image.png</code></pre><div class="doclinks"><a href="https://github.com/lxy12306/gd/blob/master/OSS.md" target="_blank" rel="noopener noreferrer">OSS 配置与完整用法 ↗</a></div></section>
+      <section id="site"><h2>04 / 发布静态站点</h2><p class="intro"><code>gd site</code> 可发布 HTML、CSS、JavaScript 和图片。目标须提供 GD 兼容的写入接口；只知道一个普通网页网址无法上传。</p><h3>发布到已配置的站点</h3><pre><code>gd site list
+gd site publish .\docs --site chatgpt</code></pre><p>发布时会逐个上传文件，再从公开地址回读 SHA-256 响应头核对。这个站点的首页源文件是 <code>docs/index.html</code>，说明页是 <code>docs/guide.html</code>。</p><h3>配置新的 ChatGPT Site</h3><pre><code>gd site add mysite --provider chatgpt --url https://your-site.chatgpt.site
+gd site login mysite
+gd site publish .\dist --site mysite</code></pre><p>目标站点需要先部署 GD 发布器及其存储和写入密钥。站点地址与密钥保存在本机 <code>~/.gd/sites.json</code>；<code>gd site list</code> 不输出密钥。</p><h3>配置自有服务器</h3><pre><code>gd site add myserver --provider self --url https://example.com --root D:\sites\public
+gd site login myserver
+gd site serve --site myserver --host 127.0.0.1 --port 8765</code></pre><p>公网访问需要自备 DNS、HTTPS 和反向代理。另开终端执行 <code>gd site publish .\dist --site myserver</code>。单文件最大 20 MB；目录发布跳过隐藏文件，并拒绝符号链接。</p><div class="doclinks"><a href="https://github.com/lxy12306/gd/blob/master/SITE.md" target="_blank" rel="noopener noreferrer">站点配置与完整用法 ↗</a></div></section>
+      <section id="docs"><h2>05 / 查阅完整文档</h2><p>本页是快速入门。安装、参数、Python API 和模块开发的完整说明保存在仓库中。</p><div class="doclinks"><a href="https://github.com/lxy12306/gd/blob/master/README.md" target="_blank" rel="noopener noreferrer">项目概览 ↗</a><a href="https://github.com/lxy12306/gd/blob/master/GD.md" target="_blank" rel="noopener noreferrer">命令手册 ↗</a><a href="https://github.com/lxy12306/gd/blob/master/OSS.md" target="_blank" rel="noopener noreferrer">OSS 文档 ↗</a><a href="https://github.com/lxy12306/gd/blob/master/SITE.md" target="_blank" rel="noopener noreferrer">站点文档 ↗</a><a href="https://github.com/lxy12306/gd/blob/master/MODULES.md" target="_blank" rel="noopener noreferrer">模块扩展 ↗</a></div></section>
+    </div></div>
+  </main>
+  <footer class="footer"><div class="wrap"><span>gd · 本地脚本、对象存储与静态站点发布</span><a href="/">返回首页 ↑</a></div></footer>
+</body>
+</html>
