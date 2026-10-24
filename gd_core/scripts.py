@@ -51,7 +51,10 @@ def run_script(script: Script, argv: list[str]) -> int:
     if script.runner == "exec":
         command = [script.path]
     elif script.runner == "powershell":
-        command = [script.interpreter, "-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script.path]
+        command = [script.interpreter, "-NoLogo", "-NoProfile"]
+        if os.name == "nt":
+            command += ["-ExecutionPolicy", "Bypass"]
+        command += ["-File", script.path]
     else:
         command = [script.interpreter, script.path]
     # An optional leading separator belongs to gd, all following tokens belong to the script.

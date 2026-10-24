@@ -4,7 +4,7 @@
 
 ## 平台说明
 
-本指南的终端和路径示例按 **Windows / PowerShell** 编写。虚拟环境准备、Python 命令执行和全局入口管理脚本为 Windows 版本：
+下文的多数终端和路径示例按 **Windows / PowerShell** 编写。Linux 安装和运行命令见 [Linux：准备、运行与移除](#linux准备运行与移除)。
 
 | Windows 脚本 | 用途 |
 |---|---|
@@ -12,7 +12,7 @@
 | `windows/run.ps1` | 使用 `.venv\Scripts\python.exe` 执行 Python 命令 |
 | `windows/install-gd.ps1` | 更新、迁移或移除 Windows `gd.exe` 启动器 |
 
-下文的 `powershell.exe`、盘符路径和 `.venv\Scripts` 命令适用于 Windows；Linux/macOS 的环境安装流程需使用对应系统的解释器路径和部署方式。
+下文的 `powershell.exe`、盘符路径和 `.venv\Scripts` 命令适用于 Windows。
 
 Windows 脚本统一放在仓库的 `windows` 目录，按脚本位置定位仓库根目录；虚拟环境仍位于仓库根目录的 `.venv`。相对路径示例从仓库根目录执行。
 
@@ -161,6 +161,42 @@ gd oss put --help
 各命令支持 `--json`、`--bucket`、`--region`、`--endpoint`、`--env-file`；这些选项可以放在 `gd` 后、`oss` 后或操作命令后。默认避免覆盖；确实需要覆盖时加 `--overwrite`。批量上传默认跳过 `.env*`、`.git`、`.venv` 等，额外排除使用 `--exclude "*.tmp"`。上传/下载继续使用原工具的并发分片、断点续传、CRC 校验和逐文件结果报告。
 
 ## 安装及移除
+
+### Linux：准备、运行与移除
+
+需要 Python 3.10+、`venv`、`pip`、Bash。从仓库根目录执行：
+
+```bash
+bash linux/setup.sh
+.venv/bin/gd --help
+.venv/bin/gd list
+```
+
+环境位于仓库的 `.venv`；全局入口默认是 `~/.local/bin/gd`，指向 `.venv/bin/gd`。确保 `~/.local/bin` 在 `PATH` 中（必要时在 shell 配置中加入 `export PATH="$HOME/.local/bin:$PATH"`），或直接用 `.venv/bin/gd`。安装器遇到其他项目的 `gd` 会停止；明确迁移时指定原项目路径。
+
+| 选项 | 用途 |
+|---|---|
+| `--python <命令或路径>` | 创建环境时使用指定的 Python；已有环境仍复用原解释器 |
+| `--dev` | 安装完整测试依赖 |
+| `--core-only` | 只安装核心，不安装 OSS SDK；不能与 `--dev` 同用 |
+| `--no-launcher` | 不更新全局 `gd` 入口 |
+| `--install-dir <目录>` | 把全局入口安装在指定目录，默认 `~/.local/bin` |
+| `--migrate-from <旧项目路径>` | 显式接管旧项目拥有的入口 |
+
+运行项目 Python，保留参数、工作目录和退出码：
+
+```bash
+bash linux/run.sh -m pytest
+bash linux/run.sh gd.py list
+```
+
+移除全局入口而保留环境、配置与已注册脚本：
+
+```bash
+.venv/bin/python linux/install-gd.py --uninstall
+```
+
+如果安装时用了 `--install-dir`，移除时也传相同选项。缺失或损坏的 `.venv` 不会被安装脚本自动覆盖；修复或移走后再运行。Linux 上的 `.sh` 用 Bash 执行；无扩展名的可执行文件需要执行权限。PowerShell 脚本需要安装 `pwsh`。
 
 ### Windows：准备或更新虚拟环境
 

@@ -27,6 +27,23 @@ gd oss search 文生图
 
 注册信息保存在 `~/.gd/scripts.json`，脚本保留在原位置。移除注册只删除名称与路径的关联。OSS 默认读取 `~/.ossenv`，字段保持 `ACCESS_KEY_ID`、`ACCESS_KEY_SECRET` 等无前缀形式。
 
+## 安装（Linux）
+
+需要 Python 3.10+、`venv`、`pip` 和 Bash。在仓库根目录运行：
+
+```bash
+bash linux/setup.sh
+.venv/bin/gd list
+```
+
+脚本创建或复用 `.venv`，安装项目与 OSS 可选依赖，并在 `~/.local/bin/gd` 建立指向本项目环境的入口。确保 `~/.local/bin` 位于 `PATH`；也可直接运行 `.venv/bin/gd`。仅安装核心用 `--core-only`，开发环境用 `--dev`，不安装全局入口用 `--no-launcher`。详细选项和卸载命令见 [GD.md](GD.md#linux准备运行与移除)。
+
+```bash
+bash linux/run.sh -m pytest
+gd add hello ./examples/hello.py
+gd hello --name 张三
+```
+
 ## 安装（Windows）
 
 在仓库根目录准备环境并安装全局命令（Windows，Python 3.10+）：
@@ -37,7 +54,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1
 
 脚本会创建或复用本仓库的 `.venv`，安装项目和 OSS 依赖，检查环境，再安装绑定该环境的 `gd` 启动器。以后从任意目录执行 `gd ...` 都使用 `.venv` 中的 Python，不需要激活环境。本机已从原来的 `code` 安装迁移到本仓库。
 
-`windows/setup.ps1`、`windows/run.ps1` 和 `windows/install-gd.ps1` 是 Windows 脚本，本文的 `powershell.exe` 及 `.venv\Scripts` 示例对应 Windows；其他系统的环境安装需使用其对应的解释器路径和部署方式。
+`windows/setup.ps1`、`windows/run.ps1` 和 `windows/install-gd.ps1` 是 Windows 脚本，本文的 `powershell.exe` 及 `.venv\Scripts` 示例对应 Windows。
 
 脚本从 `windows` 目录定位仓库根目录，虚拟环境统一放在仓库根目录的 `.venv`。下方相对路径命令均在仓库根目录执行。
 
@@ -68,6 +85,10 @@ windows/                 Windows 平台脚本
   setup.ps1              准备虚拟环境和命令入口
   run.ps1                使用项目 Python 执行命令
   install-gd.ps1         安装、迁移和移除启动器
+linux/                   Linux 平台脚本
+  setup.sh               准备虚拟环境和命令入口
+  run.sh                 使用项目 Python 执行命令
+  install-gd.py          安装、迁移和移除入口
 ```
 
 普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。站点发布详见 [SITE.md](SITE.md)，GD 公共站点的页面源文件是 [首页](docs/index.html) 和 [使用说明](docs/guide.html)。
@@ -76,7 +97,16 @@ windows/                 Windows 平台脚本
 
 开发代理和协作约定见 [AGENTS.md](AGENTS.md)。
 
-## 验证（Windows）
+## 验证
+
+Linux：
+
+```bash
+bash linux/setup.sh --dev --no-launcher
+bash linux/run.sh -m pytest
+```
+
+Windows：
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1 -Dev

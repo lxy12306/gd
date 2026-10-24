@@ -239,3 +239,19 @@ def test_powershell_script_runs_with_arguments(tmp_path, capfd):
     capfd.readouterr()
     assert main(["ps-demo", "-Value", "space value & literal"]) == 6
     assert capfd.readouterr().out.strip() == "space value & literal"
+
+
+@pytest.mark.skipif(os.name == "nt", reason="Unix executable bit")
+def test_linux_executable_and_bash_scripts(tmp_path, capfd):
+    executable = tmp_path / "no extension"
+    executable.write_text("#!/bin/sh\nprintf '%s\\n' \"$1\"\nexit 8\n", encoding="utf-8")
+    executable.chmod(0o755)
+    shell = tmp_path / "shell script.sh"
+    shell.write_text("printf '%s\\n' \"$1\"\nexit 9\n", encoding="utf-8")
+    assert main(["add", "executable", str(executable)]) == 0
+    assert main(["add", "shell", str(shell)]) == 0
+    capfd.readouterr()
+    assert main(["executable", "space value"]) == 8
+    assert capfd.readouterr().out.strip() == "space value"
+    assert main(["shell", "中文 参数"]) == 9
+    assert capfd.readouterr().out.strip() == "中文 参数"

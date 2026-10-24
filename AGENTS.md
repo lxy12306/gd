@@ -17,12 +17,13 @@
 - `windows/install-gd.ps1`：Windows 全局启动器的安装、更新和移除。
 - `windows/setup.ps1`：Windows 下创建或复用项目虚拟环境、安装依赖并准备命令入口。
 - `windows/run.ps1`：Windows 下统一使用本仓库 `.venv` 执行 Python 命令。
+- `linux/`：Linux 下创建/复用 `.venv`、运行项目 Python，以及安装、迁移和移除 `~/.local/bin/gd` 入口。
 
 阅读文档：[README.md](README.md) 是入口，[GD.md](GD.md) 是使用指南，[OSS.md](OSS.md) 介绍 OSS 配置和 Python API，[SITE.md](SITE.md) 介绍站点发布，[MODULES.md](MODULES.md) 介绍模块扩展。本文件列开发约束；具体命令和配置行为在使用文档说明。
 
 ## 开发环境与源码验证（Windows）
 
-本节及后面的 PowerShell 命令适用于 Windows，解释器路径为 `.venv\Scripts\python.exe`。其他系统任务需按其实际路径和部署方式执行，不照搬 Windows 命令。
+本节及后面的 PowerShell 命令适用于 Windows，解释器路径为 `.venv\Scripts\python.exe`。Linux 用 `bash linux/setup.sh --dev --no-launcher` 和 `bash linux/run.sh -m pytest`；解释器位于 `.venv/bin/python`。
 
 开发和验证从本仓库根目录执行，Python 命令默认使用本仓库的 `.venv`：通过 `windows/run.ps1` 或明确的 `.\.venv\Scripts\python.exe` 执行，不使用未激活环境的裸 `python`/`pip`。`gd` 启动器也绑定本仓库环境；先核对导入路径，避免验证其他源码副本。
 

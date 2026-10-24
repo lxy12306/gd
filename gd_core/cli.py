@@ -46,7 +46,7 @@ def build_parser(modules: dict[str, Module]) -> argparse.ArgumentParser:
     add.add_argument("path")
     add.add_argument("--description", "-d", default="", help="脚本用途说明")
     add.add_argument("--runner", choices=["auto", "python", "powershell", "bash", "exec"], default="auto")
-    add.add_argument("--interpreter", help="解释器名称或完整路径，例如另一个虚拟环境的 python.exe")
+    add.add_argument("--interpreter", help="解释器名称或完整路径，例如另一个虚拟环境的 Python")
     add.add_argument("--cwd", help="固定运行目录；省略则沿用调用 gd 时的目录")
     add.add_argument("--replace", action="store_true", help="更新同名脚本注册")
     add.add_argument("--json", action="store_true")

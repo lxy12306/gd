@@ -17,13 +17,17 @@
 <body>
   <header class="top"><div class="wrap"><a class="brand" href="/"><b>g</b> gd</a><nav aria-label="页面导航"><a href="/">首页</a><a href="#install">安装</a><a href="#scripts">脚本</a><a href="#oss">OSS</a><a href="#site">站点</a><a href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">源码 ↗</a></nav></div></header>
   <main>
-    <div class="hero"><div class="wrap"><div class="eyebrow">GD / GUIDE</div><h1>gd 使用说明</h1><p>一个命令入口，管理本地脚本、阿里云 OSS 和静态站点。下面的示例按 Windows PowerShell 编写；完整参数和模块扩展方法见 GitHub 仓库。</p><div class="links"><a class="button primary" href="#install">从安装开始 ↓</a><a class="button secondary" href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">查看源码 ↗</a></div></div></div>
+    <div class="hero"><div class="wrap"><div class="eyebrow">GD / GUIDE</div><h1>gd 使用说明</h1><p>一个命令入口，管理本地脚本、阿里云 OSS 和静态站点。支持 Windows 和 Linux；下面分别列出安装命令，其余示例以 Windows PowerShell 为主。</p><div class="links"><a class="button primary" href="#install">从安装开始 ↓</a><a class="button secondary" href="https://github.com/lxy12306/gd" target="_blank" rel="noopener noreferrer">查看源码 ↗</a></div></div></div>
     <div class="wrap layout"><aside class="side" aria-label="本页目录"><strong>本页目录</strong><a href="#install">01 安装与检查</a><a href="#scripts">02 管理脚本</a><a href="#oss">03 OSS 文件</a><a href="#site">04 发布站点</a><a href="#docs">05 完整文档</a></aside><div class="article">
-      <section id="install"><h2>01 / 安装与检查</h2><p class="intro">下载仓库后，在仓库根目录运行安装脚本。需要 Python 3.10 或更新版本。</p><pre><code>git clone https://github.com/lxy12306/gd.git
+      <section id="install"><h2>01 / 安装与检查</h2><p class="intro">需要 Python 3.10 或更新版本。下载仓库后，在仓库根目录运行对应系统的安装脚本。</p><h3>Linux / Bash</h3><pre><code>git clone https://github.com/lxy12306/gd.git
+cd gd
+bash linux/setup.sh
+.venv/bin/gd --version
+.venv/bin/gd list</code></pre><p>Linux 入口默认安装在 <code>~/.local/bin/gd</code>。确保 <code>~/.local/bin</code> 位于 <code>PATH</code>；也可直接运行 <code>.venv/bin/gd</code>。开发环境用 <code>bash linux/setup.sh --dev</code>，只准备环境用 <code>--no-launcher</code>。</p><h3>Windows / PowerShell</h3><pre><code>git clone https://github.com/lxy12306/gd.git
 cd gd
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1
 gd --version
-gd list</code></pre><p>安装脚本准备项目虚拟环境和全局 <code>gd</code> 命令。以后从任意目录都可运行 <code>gd</code>。开发环境可给安装脚本加 <code>-Dev</code>。</p><div class="callout">示例中的路径、站点地址和对象名需要按你的环境替换。配置文件和写入密钥只保存在本机，不应提交到仓库。</div></section>
+gd list</code></pre><p>安装脚本准备项目虚拟环境和全局 <code>gd</code> 命令。以后可从任意目录运行 <code>gd</code>；Windows 开发环境在安装命令末尾加 <code>-Dev</code>。</p><div class="callout">示例中的路径、站点地址和对象名需要按你的环境替换。配置文件和写入密钥只保存在本机，不应提交到仓库。</div></section>
       <section id="scripts"><h2>02 / 管理本地脚本</h2><p class="intro">注册一次后，脚本可按名称调用。注册只记录脚本路径，不会复制或执行脚本。</p><pre><code>gd add hello .\examples\hello.py -d "问候示例"
 gd hello --name 张三
 gd run hello -- --name 张三
