@@ -29,8 +29,9 @@
 <span class="comment"># 发布页面并回读校验</span>
 <span class="prompt">❯</span> gd site publish ./dist
 
-<span class="comment"># 注册本地脚本</span>
-<span class="prompt">❯</span> gd add hello ./examples/hello.py</pre></div></div></section>
+<span class="comment"># 注册并运行本地脚本</span>
+<span class="prompt">❯</span> gd add hello ./examples/hello.py
+<span class="prompt">❯</span> gd hello --name 张三</pre></div></div></section>
     <div class="strip"><div class="wrap"><b>GD / 02</b><span>站点读写分离 · 写入密钥留在本机 · 文件回读核对 SHA-256</span></div></div>
     <section class="content" id="modules"><div class="wrap"><div class="section-top"><div><div class="overline">TOOLBOX</div><h2>三个清楚的入口</h2></div><p>常用操作留在命令行；配置、凭证和发布目标分别管理。</p></div><div class="grid"><article class="card"><div class="num">MODULE / 01</div><h3>脚本</h3><p>注册 Python、PowerShell 或 Bash 脚本，从任意目录以名称运行。注册信息保存在用户目录。</p><code>gd add · gd list · gd run</code></article><article class="card"><div class="num">MODULE / 02</div><h3>OSS</h3><p>上传、下载和检索对象。Windows 上可选 WLAN 直连，避免本机代理路径影响连接。</p><code>gd oss put · gd oss get · gd oss ls</code></article><article class="card"><div class="num">MODULE / 03</div><h3>站点</h3><p>本地配置站点地址，用带密钥的 HTTP 接口发布静态文件，并从公开页面核对结果。</p><code>gd site add · gd site login · gd site publish</code></article></div></div></section>
     <section class="content how" id="publish"><div class="wrap"><div class="section-top"><div><div class="overline">PUBLISH FLOW</div><h2>从本地文件到浏览器</h2></div><p>发布后的页面由站点直接返回正确的 HTML 类型，浏览器可直接打开。</p></div><div class="flow"><div class="step"><small>01 / CONFIGURE</small><h3>配置目标</h3><p>保存 ChatGPT Site 或自有服务器的网址。配置文件默认位于 <strong>~/.gd/sites.json</strong>。</p></div><div class="step"><small>02 / UPLOAD</small><h3>上传文件</h3><p>命令递归发送静态文件。写入请求需要密钥；隐藏文件、凭证文件和符号链接不会发布。</p></div><div class="step"><small>03 / VERIFY</small><h3>回读确认</h3><p>逐个检查公开地址的 SHA-256 响应头。上传接口成功但页面未可用时，命令会报错。</p></div></div></div></section>

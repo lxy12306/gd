@@ -23,7 +23,7 @@
 cd gd
 bash linux/setup.sh
 .venv/bin/gd --version
-.venv/bin/gd list</code></pre><p>Linux 入口默认安装在 <code>~/.local/bin/gd</code>。确保 <code>~/.local/bin</code> 位于 <code>PATH</code>；也可直接运行 <code>.venv/bin/gd</code>。开发环境用 <code>bash linux/setup.sh --dev</code>，只准备环境用 <code>--no-launcher</code>。</p><h3>Windows / PowerShell</h3><pre><code>git clone https://github.com/lxy12306/gd.git
+.venv/bin/gd list</code></pre><p>Linux 入口默认安装在 <code>~/.local/bin/gd</code>。确保 <code>~/.local/bin</code> 位于 <code>PATH</code>；也可直接运行 <code>.venv/bin/gd</code>。开发环境用 <code>bash linux/setup.sh --dev</code>，只安装核心用 <code>--core-only</code>，只准备环境用 <code>--no-launcher</code>。移除全局入口可运行 <code>.venv/bin/python linux/install-gd.py --uninstall</code>。</p><h3>Windows / PowerShell</h3><pre><code>git clone https://github.com/lxy12306/gd.git
 cd gd
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1
 gd --version

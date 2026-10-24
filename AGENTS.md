@@ -114,4 +114,6 @@ Get-Content -LiteralPath $taskGdManifest -Raw -Encoding UTF8 | ConvertFrom-Json 
 
 命令行为、安装方法、模块接口或配置变化时同步更新实现、测试及相应文档。使用指南放在 `GD.md`，面向开发代理的约定放在本文件。
 
+每次提交前都要更新 `docs/index.html`（首页）和 `docs/guide.html`（使用说明），让两页反映本次提交的内容；这两个文件须与代码或文档改动一起提交。每次提交后，从仓库根目录运行 `gd site publish ./docs --site chatgpt`（或用本仓库虚拟环境中的 Python 执行 `gd.py site publish ./docs --site chatgpt`），发布两页。以命令的公开地址回读校验结果确认发布成功；失败时修复并重试，不报告已发布。远程推送仍按用户任务范围执行。
+
 提交信息说明具体变更。不要将凭证、构建结果或临时运行文件放入提交。提交和远程推送根据用户任务范围执行。
