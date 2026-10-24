@@ -38,7 +38,7 @@ gd remove hello
 | `gd remove <名称>` / `gd rm <名称>` | 移除注册，保留原脚本文件 |
 | `gd --version` | 查看版本 |
 
-名称使用小写字母、数字、`_`、`-`，以小写字母开头。`oss` 和管理命令名称已保留。同名注册需要 `--replace` 才会更新。`add` 也可写作 `register`。`list/add/info/remove` 支持 `--json`。
+名称使用小写字母、数字、`_`、`-`，以小写字母开头。`oss`、`site` 和管理命令名称已保留。同名注册需要 `--replace` 才会更新。`add` 也可写作 `register`。`list/add/info/remove` 支持 `--json`。
 
 自动识别 `.py`、`.pyw`、`.ps1`、`.sh` 和 Windows `.exe/.com`；Linux/macOS 可直接运行具有执行权限的文件。其他扩展名可通过 `--runner python/powershell/bash/exec` 指定。Windows `.bat/.cmd` 不在支持范围内，可改用 PowerShell 脚本。
 
@@ -65,9 +65,30 @@ gd --home D:\gd-tools list --json
 
 带多级子命令的模块通过 Python `gd.modules` 入口扩展，无需修改核心；见 [MODULES.md](MODULES.md)。
 
+## 站点快速使用
+
+`gd site` 发布 HTML、CSS、JavaScript 和图片等静态文件到已配置的 ChatGPT Site 或自有服务器。站点地址和写入密钥存在当前用户的 `~/.gd/sites.json`，不写入项目源码。本机已配置可用的 `chatgpt` 站点；从仓库根目录可发布 `docs/index.html`：
+
+```powershell
+gd site list
+gd site publish .\docs --site chatgpt
+gd site publish .\index.html --as index.html --site chatgpt
+```
+
+新目标使用 `gd site add <名称> --provider chatgpt|self --url <公开地址>` 添加，再运行 `gd site login <名称>` 安全输入该目标的写入密钥。自有服务器还需要 `--root <静态文件目录>`，通过 `gd site serve --site <名称>` 启动本地 HTTP 服务。完整配置、限制与服务端协议见 [SITE.md](SITE.md)。
+
 ## OSS 快速使用
 
 `gd oss put` 上传，`gd oss get` 下载，`gd oss ls` 列举。默认操作你现有的杭州 `smell` Bucket，配置读取当前用户目录下的 `~/.ossenv`。你这台 Windows 电脑对应 `C:\Users\92416\.ossenv`，与执行命令时所在目录无关。
+
+本机 APNetwork 路径影响 OSS 连接时，在 `gd oss` 命令加 `--direct-wlan`，只让当前进程的 OSS 请求从 Windows `WLAN` 接口直连。脚本仍使用 OSS 原域名进行 HTTPS 校验，不修改系统路由。例如：
+
+```powershell
+gd oss --direct-wlan stat software-ai-news/index.html
+gd oss put .\report.html reports/report.html --overwrite --direct-wlan
+```
+
+此选项只支持 Windows 和默认 OSS 地域端点；自定义 `ENDPOINT` / `USE_CNAME` 不适用。`config` 与上传 dry-run 不连接 OSS，即使带此选项也不会查询 WLAN。
 
 ```powershell
 # 上传文件；省略远端路径时使用本地文件名

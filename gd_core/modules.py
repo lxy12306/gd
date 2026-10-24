@@ -47,8 +47,9 @@ def discover_modules() -> dict[str, Module]:
         "oss": Module(
             "oss", "阿里云 OSS：上传、下载、检索及文件管理", "gd_core.oss:main",
             {"--env-file": 1, "--bucket": 1, "--region": 1, "--endpoint": 1,
-             "--cname": 0, "--no-cname": 0, "--json": 0},
-        )
+             "--cname": 0, "--no-cname": 0, "--json": 0, "--direct-wlan": 0},
+        ),
+        "site": Module("site", "静态站点：发布到 ChatGPT Site 或自有服务器", "gd_core.site:main"),
     }
     for entry in metadata.entry_points(group="gd.modules"):
         if not valid_name(entry.name) or entry.name in MANAGEMENT_NAMES or entry.name in modules:

@@ -94,6 +94,13 @@ def test_global_flags_preserved_at_all_three_levels(capsys):
     assert json.loads(capsys.readouterr().out)["bucket"] == "action-bucket"
 
 
+def test_direct_wlan_flag_reaches_oss_module_before_or_after_command(capsys):
+    assert main(["--direct-wlan", "oss", "config"]) == 0
+    assert "smell" in capsys.readouterr().out
+    assert main(["oss", "config", "--direct-wlan"]) == 0
+    assert "smell" in capsys.readouterr().out
+
+
 def test_help_without_subcommand(capsys):
     assert main([]) == 0
     assert "gd oss put" in capsys.readouterr().out

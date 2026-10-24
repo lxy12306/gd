@@ -4,11 +4,12 @@
 
 ## 项目目标与结构
 
-`gd` 是通用脚本工具箱，OSS 是其中一个功能模块。Python 最低版本为 3.10。
+`gd` 是通用脚本工具箱，OSS 和静态站点发布是其中两个功能模块。Python 最低版本为 3.10。
 
 - `gd_core/`：命令分发、模块发现、脚本注册与运行，只依赖 Python 标准库。
 - `gd_core/oss.py`：OSS 适配器，实际调用时才导入 OSS 模块。
 - `oss_toolkit/`：OSS 命令、配置和基于官方 SDK 的服务封装。
+- `gd_core/site.py`：基于标准库的静态站点发布与本地 HTTP 服务；站点地址和写入密钥放在用户本地 `~/.gd/sites.json`。
 - `examples/`：可注册的普通脚本示例。
 - `tests/`：核心测试，以及官方 SDK 访问本地 HTTP 服务的 OSS 测试。
 - `pyproject.toml`：打包、命令入口、可选依赖与测试配置。
@@ -17,7 +18,7 @@
 - `windows/setup.ps1`：Windows 下创建或复用项目虚拟环境、安装依赖并准备命令入口。
 - `windows/run.ps1`：Windows 下统一使用本仓库 `.venv` 执行 Python 命令。
 
-阅读文档：[README.md](README.md) 是入口，[GD.md](GD.md) 是使用指南，[OSS.md](OSS.md) 介绍 OSS 配置和 Python API，[MODULES.md](MODULES.md) 介绍模块扩展。本文件列开发约束；具体命令和配置行为在使用文档说明。
+阅读文档：[README.md](README.md) 是入口，[GD.md](GD.md) 是使用指南，[OSS.md](OSS.md) 介绍 OSS 配置和 Python API，[SITE.md](SITE.md) 介绍站点发布，[MODULES.md](MODULES.md) 介绍模块扩展。本文件列开发约束；具体命令和配置行为在使用文档说明。
 
 ## 开发环境与源码验证（Windows）
 
@@ -44,6 +45,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows\setup.ps1 -Dev
 ## 开发约定
 
 - 保持核心独立。不要在核心入口、帮助、模块列举或脚本注册过程中导入 OSS SDK 等模块专属依赖。
+- 站点模块通过 HTTP PUT 上传并以公开地址的 `X-GD-SHA256` 回读核对。写入密钥只在本机配置和服务端 secret，不进入仓库、测试输出或站点页面。
 - 新的多级命令模块通过 `gd.modules` entry point 扩展，入口为 `main(argv) -> int | None`，模块自己解析参数和管理依赖。
 - 保持 `gd oss ...`、`oss-tool`、`oss_cli.py`、`python -m oss_toolkit` 和现有 Python API 的兼容性。
 - OSS 通用选项仍支持放在 `gd` 后、`oss` 后或具体操作后。同一选项重复指定时，最后一次指定的值生效；保留现有命令别名。基线见 `tests/test_gd.py::test_global_flags_preserved_at_all_three_levels` 和 [GD.md](GD.md)。

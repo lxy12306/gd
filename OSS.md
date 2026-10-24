@@ -51,6 +51,8 @@ py -3 -m venv .venv
 
 ## 常用操作
 
+如果本机经 APNetwork 隧道连接 OSS 不通，可给 `gd oss` 命令添加 `--direct-wlan`，仅当前进程的 OSS 请求从 Windows `WLAN` 接口直连。例如 `gd oss --direct-wlan stat software-ai-news/index.html`。该选项保持 OSS 域名的 HTTPS 校验，只支持默认地域端点；自定义 `ENDPOINT` / `USE_CNAME` 不适用。
+
 每条命令都可以追加 `--json` 输出机器可读结果。以下命令在仓库根目录执行；也可以使用 `python -m oss_toolkit` 替代 `python oss_cli.py`。
 
 ### 列举与检索

@@ -68,7 +68,7 @@ def test_list_info_remove_and_missing_file(tmp_path, capsys):
     capsys.readouterr()
     assert main(["ls", "--json"]) == 0
     result = json.loads(capsys.readouterr().out)
-    assert [module["name"] for module in result["modules"]] == ["oss"]
+    assert [module["name"] for module in result["modules"]] == ["oss", "site"]
     assert result["scripts"][0]["name"] == "demo"
     assert result["scripts"][0]["status"] == "ready"
     assert main(["info", "demo", "--json"]) == 0

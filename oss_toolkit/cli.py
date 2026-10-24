@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import ExitStack
 from datetime import datetime
 from pathlib import Path
 import json
@@ -88,6 +89,8 @@ def add_common(parser: argparse.ArgumentParser, *, child: bool = False) -> None:
     parser.add_argument("--region", default=default, help="覆盖地域，例如 cn-hangzhou")
     parser.add_argument("--endpoint", default=default, help="覆盖完整的 http(s) endpoint")
     parser.add_argument("--cname", action=argparse.BooleanOptionalAction, default=default, help="使用已绑定的自定义 Bucket 域名")
+    parser.add_argument("--direct-wlan", action="store_true", default=argparse.SUPPRESS if child else False,
+                        help="仅本进程的 OSS 请求走 Windows WLAN 直连")
     parser.add_argument("--json", action="store_true", default=argparse.SUPPRESS if child else False, help="输出 JSON，便于脚本调用")
 
 
@@ -209,6 +212,7 @@ def normalize_args(args: argparse.Namespace) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
+    route_stack = ExitStack()
     try:
         normalize_args(args)
         settings = Settings.from_env(args.env_file, bucket=args.bucket, region=args.region, endpoint=args.endpoint, use_cname=args.cname)
@@ -236,7 +240,12 @@ def run(args: argparse.Namespace) -> int:
             output(report.to_dict())
             return 0
 
-        manager = OSSManager(settings)
+        if args.direct_wlan:
+            from .network import direct_wlan_client
+            client = route_stack.enter_context(direct_wlan_client(settings))
+            manager = OSSManager(settings, client=client)
+        else:
+            manager = OSSManager(settings)
         if args.command in {"list", "search"}:
             limit = args.limit or None
             if args.command == "list":
@@ -297,6 +306,8 @@ def run(args: argparse.Namespace) -> int:
         else:
             print("错误：" + terminal_text(error), file=sys.stderr)
         return 1
+    finally:
+        route_stack.close()
 
 
 def main(argv: list[str] | None = None) -> int:

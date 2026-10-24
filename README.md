@@ -1,6 +1,6 @@
 # gd 通用脚本工具箱
 
-`gd` 是统一命令入口，负责管理本地脚本和加载功能模块。OSS 是其中一个模块，继续使用 `gd oss put/get/ls/search`。核心只使用 Python 标准库；查看帮助、管理脚本和运行自定义脚本无需 OSS SDK 或云端凭证。
+`gd` 是统一命令入口，负责管理本地脚本和加载功能模块。OSS 使用 `gd oss put/get/ls/search`；静态站点使用 `gd site add/login/publish/serve`。核心只使用 Python 标准库；查看帮助、管理脚本、运行自定义脚本和站点发布无需 OSS SDK 或云端凭证。
 
 ## 快速使用
 
@@ -70,7 +70,7 @@ windows/                 Windows 平台脚本
   install-gd.ps1         安装、迁移和移除启动器
 ```
 
-普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。
+普通脚本无需修改核心即可添加。带多级子命令的功能模块通过 `gd.modules` Python entry point 扩展，入口约定为 `main(argv) -> int | None`。站点发布详见 [SITE.md](SITE.md)，GD 公共站点的页面源文件是 [docs/index.html](docs/index.html)。
 
 使用详解见 [GD.md](GD.md)，OSS 配置和 Python API 见 [OSS.md](OSS.md)，模块开发见 [MODULES.md](MODULES.md)。
 
